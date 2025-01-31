@@ -10,29 +10,52 @@ const sanity = sanityClient({
   apiVersion: "2021-08-31",
   useCdn: true,
 });
-
-interface Product {
+type Product = {
   _id: string;
   name: string;
   category: string;
   price: number;
   originalPrice: number;
+  tags: string[];
   description: string;
+  available: boolean;
   discountPercentage: number;
   imageUrl: string;
-  tags: string[];
-}
+};
 
-interface Chef {
+type Chef = {
   _id: string;
   name: string;
   position: string;
-  experience: string;
+  experience: number;
   specialty: string;
   description: string;
   available: boolean;
   imageUrl: string;
-}
+};
+
+// interface Product {
+//   _id: string;
+//   name: string;
+//   category: string;
+//   price: number;
+//   originalPrice: number;
+//   description: string;
+//   discountPercentage: number;
+//   imageUrl: string;
+//   tags: string[];
+// }
+
+// interface Chef {
+//   _id: string;
+//   name: string;
+//   position: string;
+//   experience: string;
+//   specialty: string;
+//   description: string;
+//   available: boolean;
+//   imageUrl: string;
+// }
 
 const ProductCards: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -70,18 +93,19 @@ const ProductCards: React.FC = () => {
       const foodData = await sanity.fetch(foodQuery);
       const chefData = await sanity.fetch(chefQuery);
 
-      const safeFoodProducts = foodData.map((product: any) => ({
+      const safeFoodProducts = foodData.map((product: Product) => ({
         ...product,
         tags: product.tags || [],
         imageUrl: product.imageUrl || '',
         description: product.description || 'No description available',
       }));
-
-      const safeChefs = chefData.map((chef: any) => ({
+      
+      const safeChefs = chefData.map((chef: Chef) => ({
         ...chef,
         imageUrl: chef.imageUrl || '',
         description: chef.description || 'No description available',
       }));
+      
 
       setProducts(safeFoodProducts);
       setChefs(safeChefs);
